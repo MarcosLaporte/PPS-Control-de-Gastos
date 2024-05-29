@@ -1,8 +1,8 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'io.ionic.starter',
-  appName: 'PPS-PP-App10',
+  appId: 'com.pp10.app',
+  appName: 'Control de Gastos',
   webDir: 'www'
 };
 
