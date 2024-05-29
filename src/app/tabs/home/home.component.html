@@ -1,0 +1,27 @@
+<div class="container bg-img">
+  <ion-card>
+    Bienvenido a la aplicación de control de gastos!<br>
+    Aquí podrá controlar sus ingresos y gastos mensuales, categorizando y controlando mediante gráficos.
+  </ion-card>
+
+  <ion-button id="open-modal">Open modal</ion-button>
+  <ion-modal #modal trigger="open-modal" (didDismiss)="onDidDismiss($event)">
+    <ng-template>
+      <ion-toolbar>
+        <ion-buttons slot="start">
+          <ion-button (click)="modal.dismiss(null, 'cancel')">Cancelar</ion-button>
+        </ion-buttons>
+        <ion-buttons slot="end">
+          <ion-button (click)="modal.dismiss(selMonth, 'confirm')">Aceptar</ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+      <ion-picker>
+        <ion-picker-column [value]="selMonth" (ionChange)="onIonChange($event)">
+          <ion-picker-column-option *ngFor="let month of spMonths; index as i" [value]="i">
+            {{month.longStr}}
+          </ion-picker-column-option>
+        </ion-picker-column>
+      </ion-picker>
+    </ng-template>
+  </ion-modal>
+</div>
