@@ -15,6 +15,14 @@ const routes: Routes = [
         component: HomeComponent
       },
       {
+        path: 'month',
+        component: MonthComponent
+      },
+      {
+        path: 'graphs',
+        component: GraphsComponent
+      },
+      {
         path: '',
         redirectTo: '/tabs/home',
         pathMatch: 'full'

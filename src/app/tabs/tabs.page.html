@@ -5,6 +5,16 @@
       <ion-icon aria-hidden="true" name="home-sharp"></ion-icon>
       <ion-label>Inicio</ion-label>
     </ion-tab-button>
+
+    <ion-tab-button tab="month" href="/tabs/month">
+      <ion-icon aria-hidden="true" name="calendar-sharp"></ion-icon>
+      <ion-label>{{selMonth | monthSpanish:'long'}}</ion-label>
+    </ion-tab-button>
+
+    <ion-tab-button tab="graphs" href="/tabs/graphs">
+      <ion-icon aria-hidden="true" name="stats-chart-sharp"></ion-icon>
+      <ion-label>Gráficos</ion-label>
+    </ion-tab-button>
   </ion-tab-bar>
 
 </ion-tabs>

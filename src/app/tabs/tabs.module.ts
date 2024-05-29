@@ -8,6 +8,8 @@ import { TabsPageRoutingModule } from './tabs-routing.module';
 import { TabsPage } from './tabs.page';
 import { MonthSpanishPipe } from '../month-spanish.pipe';
 import { HomeComponent } from './home/home.component';
+import { MonthComponent } from './month/month.component';
+import { GraphsComponent } from './graphs/graphs.component';
 
 @NgModule({
   imports: [
@@ -20,6 +22,8 @@ import { HomeComponent } from './home/home.component';
   declarations: [
     TabsPage,
     HomeComponent,
+    MonthComponent,
+    GraphsComponent
   ]
 })
 export class TabsPageModule {}

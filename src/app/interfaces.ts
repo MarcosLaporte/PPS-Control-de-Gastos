@@ -26,3 +26,27 @@ export const spMonths: Month[] = [
   { longStr: 'Noviembre', shortStr: 'nov' },
   { longStr: 'Diciembre', shortStr: 'dic' },
 ];
+
+export interface Budget {
+  id: string,
+  userId: string,
+  month: number, // 0-11
+  year: number,
+  income: number,
+  expenseRatio: number // >0-100
+}
+
+export interface Expense {
+  id: string,
+  date: Date,
+  category: string,
+  description: string,
+  value: number,
+}
+
+export interface UserExpenses {
+  id: string,
+  budgetId: string,
+  // expenses: Expense[]
+  expensesId: string[]
+}
