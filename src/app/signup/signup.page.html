@@ -1,0 +1,58 @@
+<div class="container bg-img">
+  <ion-card class="ion-padding">
+    <ion-card-content class="ion-no-padding">
+      <form #signupForm="ngForm">
+        <div class="inputs">
+          <ion-input label="Nombre" labelPlacement="stacked" fill="solid" type="text" [(ngModel)]="name" name="name"
+            required></ion-input>
+          <ion-input label="Apellido" labelPlacement="stacked" fill="solid" type="text" [(ngModel)]="lastName"
+            name="lastName" required></ion-input>
+          <ion-input label="Correo" [clearInput]="true" labelPlacement="stacked" fill="solid" type="email"
+            [(ngModel)]="email" name="email" required></ion-input>
+          <ion-input label="Contraseña" [clearOnEdit]="false" labelPlacement="stacked" fill="solid" type="password"
+            [(ngModel)]="password" name="password" required>
+            <ion-input-password-toggle slot="end"></ion-input-password-toggle>
+          </ion-input>
+          <ion-input label="Reingrese la contraseña" [clearOnEdit]="false" labelPlacement="stacked" fill="solid" type="password"
+            [(ngModel)]="passCheck" name="passCheck" required>
+            <ion-input-password-toggle slot="end"></ion-input-password-toggle>
+          </ion-input>
+          <ion-button expand="full" color="success" [disabled]="!signupForm.valid" (click)="signup()">
+            Registrar
+          </ion-button>
+          <div class="ion-margin-top">
+            <ion-text color="medium">Ya tiene cuenta? <a (click)="navCtrl.navigateForward('/login')">Inicie
+                sesión</a></ion-text>
+          </div>
+        </div>
+        <div class="gender-role-buttons">
+          <div class="gender-buttons">
+            <ion-text>Seleccione su género</ion-text>
+            <ion-button size="small" color="primary" (click)="gender='masculino'" [style]="getGenderStyle('masculino')">
+              Masculino
+            </ion-button>
+            <ion-button size="small" color="tertiary" (click)="gender='femenino'" [style]="getGenderStyle('femenino')">
+              Femenino
+            </ion-button>
+          </div>
+
+          <div class="role-buttons">
+            <ion-button size="small" color="primary" (click)="type='admin'" [style]="getTypeStyle('admin')">
+              Admin
+            </ion-button>
+            <ion-button size="small" color="tertiary" (click)="type='invitado'" [style]="getTypeStyle('invitado')">
+              Invitado
+            </ion-button>
+            <ion-button size="small" color="warning" (click)="type='usuario'" [style]="getTypeStyle('usuario')">
+              Usuario
+            </ion-button>
+            <ion-button size="small" color="secondary" (click)="type='tester'" [style]="getTypeStyle('tester')">
+              Tester
+            </ion-button>
+            <ion-text>Seleccione su rol</ion-text>
+          </div>
+        </div>
+      </form>
+    </ion-card-content>
+  </ion-card>
+</div>

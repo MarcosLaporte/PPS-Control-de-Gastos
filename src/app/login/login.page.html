@@ -1,0 +1,37 @@
+<div class="container bg-img">
+  <ion-card class="ion-padding">
+    <ion-card-content class="ion-no-padding">
+      <div class="quick-fill-buttons">
+        <ion-button size="small" color="primary" (click)="quickFill('admin@admin.com', '111111')">
+          Admin
+        </ion-button>
+        <ion-button size="small" color="tertiary" (click)="quickFill('invitado@invitado.com', '222222')">
+          Invitado
+        </ion-button>
+        <ion-button size="small" color="warning" (click)="quickFill('usuario@usuario.com', '333333')">
+          Usuario
+        </ion-button>
+        <ion-button size="small" color="danger" (click)="quickFill('anonimo@anonimo.com', '444444')">
+          Anónimo
+        </ion-button>
+        <ion-button size="small" color="secondary" (click)="quickFill('tester@tester.com', '555555')">
+          Tester
+        </ion-button>
+      </div>
+      <form #loginForm="ngForm">
+        <ion-input label="Correo" [clearInput]="true" labelPlacement="stacked" fill="solid" type="email"
+          [(ngModel)]="email" name="email" required></ion-input>
+        <ion-input label="Contraseña" [clearOnEdit]="false" labelPlacement="stacked" fill="solid" type="password"
+          [(ngModel)]="password" name="password" required>
+          <ion-input-password-toggle slot="end"></ion-input-password-toggle>
+        </ion-input>
+        <ion-button expand="full" color="success" [disabled]="!loginForm.valid" (click)="login()">
+          Ingresar
+        </ion-button>
+        <div class="ion-margin-top">
+          <ion-text color="medium">No está registrado? <a (click)="navCtrl.navigateForward('/signup')">Crear cuenta</a></ion-text>
+        </div>
+      </form>
+    </ion-card-content>
+  </ion-card>
+</div>

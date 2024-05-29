@@ -1,0 +1,40 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+
+  ion-card {
+    width: fit-content;
+    color: #1e7ed2;
+
+    ion-card-content {
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      .quick-fill-buttons {
+        display: flex;
+        flex-direction: column;
+        padding-right: 5px;
+        margin-right: 5px;
+        border-right: 1px solid #1e7ed2;
+      }
+
+      form {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+    }
+
+
+    ion-input {
+      font-size: x-large;
+      --color: #1e7ed2;
+    }
+  }
+}

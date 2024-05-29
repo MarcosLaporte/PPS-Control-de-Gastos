@@ -1,4 +1,11 @@
 <ion-app>
+  <ion-header [translucent]="true" *ngIf="router.url !== '/splash'">
+    <ion-toolbar>
+      <ion-item lines="none">
+        <ion-title>Control de gastos</ion-title>
+      </ion-item>
+    </ion-toolbar>
+  </ion-header>
   <ion-router-outlet></ion-router-outlet>
   <ngx-spinner [fullScreen]="true" template="<img src='../assets/spinner.gif'>"></ngx-spinner>
 </ion-app>

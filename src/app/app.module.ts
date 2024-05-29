@@ -28,6 +28,7 @@ import { NgxSpinnerModule } from 'ngx-spinner';
     provideAuth(() => getAuth()),
     provideFirestore(() => getFirestore())
   ],
+  bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class AppModule { }
