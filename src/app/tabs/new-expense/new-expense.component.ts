@@ -70,6 +70,11 @@ export class NewExpenseComponent implements OnInit {
     this.newExpense.date = new Date(this.selDateISO!);
     this.newExpense.budgetId = this.budget.id;
 
+    if (!this.newExpense.category || this.newExpense.value < 0 || !this.newExpense.description) {
+      ToastError.fire('Revise los campos.');
+      return;
+    }
+
     const expId = await this.db.addData('expenses', this.newExpense, true);
     this.newExpense.id = expId;
     return this.modalCtrl.dismiss(this.newExpense, 'confirm');

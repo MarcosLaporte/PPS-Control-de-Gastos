@@ -1,0 +1,158 @@
+.container {
+  display: flex;
+  flex-direction: column;
+
+  #header-card {
+    margin-bottom: 5px;
+    display: flex;
+    flex-direction: column;
+
+    * {
+      text-align: center;
+    }
+
+    .month-header h1{
+      margin: 0;
+      font-family: math;
+      font-size: xx-large;
+    }
+
+    .money-info {
+      width: 100%;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+
+      .exp-threshold,
+      .money-remaining {
+        width: 50%;
+        display: flex;
+        flex-direction: column;
+      }
+    }
+  }
+
+  .budget {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+
+    .expenses-card {
+      flex: 1;
+      margin: 5px 10px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+
+      padding: 5px;
+      background: rgba(255, 255, 255, 0.9);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      font-family: 'Trebuchet', sans-serif;
+
+      .table-container {
+        flex: 1;
+        overflow-y: auto;
+
+        table#expenses-table {
+          width: 100%;
+          border-collapse: collapse;
+          color: #2a2a2a;
+          background: rgba(207, 220, 150, 0.5);
+          font-family: 'Gill Sans', sans-serif;
+          font-size: 16px;
+
+          thead {
+            position: sticky;
+            top: 0;
+            background-color: #6c757d;
+            color: #ffffff;
+
+            th {
+              border-right: 1px solid #dee2e6;
+              text-align: start;
+              padding: 10px 5px;
+              font-size: 18px;
+            }
+
+            th:last-child {
+              border-right: none;
+            }
+
+            th#date {
+              width: 10%;
+            }
+
+            th#description {
+              width: 45%;
+            }
+
+            th#category {
+              width: 25%;
+            }
+
+            th#value {
+              width: 20%;
+            }
+          }
+
+          tbody {
+            overflow-y: scroll;
+
+            tr:nth-child(odd) {
+              background-color: #f8f9fa;
+            }
+
+            tr:nth-child(even) {
+              background-color: #e9ecef;
+            }
+
+            td {
+              padding: 10px 5px;
+              font-size: 16px;
+            }
+
+            td.exp-date {
+              color: #007bff;
+            }
+
+            td.exp-description {
+              font-weight: bold;
+            }
+
+            td.exp-category {
+              color: #28a745;
+            }
+
+            td.exp-value {
+              padding-right: 0;
+              color: #dc3545;
+            }
+          }
+
+          tfoot {
+            position: sticky;
+            bottom: 0;
+            background-color: #f1f1f1;
+            font-weight: bold;
+
+            td {
+              padding: 10px 5px;
+              font-size: 16px;
+              border-top: 2px solid #dee2e6;
+            }
+
+            .total-label {
+              text-align: right;
+              color: #2a2a2a;
+            }
+
+            .exp-total {
+              padding-right: 0;
+              color: #dc3545;
+            }
+          }
+        }
+      }
+    }
+  }
+}

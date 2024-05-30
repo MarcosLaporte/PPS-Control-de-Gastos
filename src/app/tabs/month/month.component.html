@@ -1,34 +1,66 @@
 <div class="container bg-img">
-  <ion-card>
-    <div *ngIf="monthBudget; else noBudget" class="budget">
-      <ion-text color="tertiary">
-        <h1 style="font-weight: bolder;">{{monthServ.SelMonth | monthSpanish}}</h1>
-      </ion-text>
-      <ion-button expand="block" (click)="openExpenseModal()">Cargar nuevo gasto</ion-button>
-      <table *ngIf="expenses.length > 0; else noExpenses" id="expenses-table">
-        <thead>
-          <th>Fecha</th>
-          <th>Descripción</th>
-          <th>Categoría</th>
-          <th>Valor</th>
-        </thead>
-        <tbody>
-          <tr *ngFor="let exp of expenses">
-            <td class="exp-date">{{exp.date | date:'dd/MM'}}</td>
-            <td class="exp-description">{{exp.description}}</td>
-            <td class="exp-category">{{exp.category}}</td>
-            <td class="exp-value">{{exp.value}}</td>
-          </tr>
-        </tbody>
-      </table>
+  <div *ngIf="monthBudget; else noBudget" class="budget">
+    <ion-card id="header-card" class="ion-padding">
+      <div class="month-header">
+        <ion-text color="tertiary">
+          <h1><b>{{monthServ.SelMonth | monthSpanish | uppercase}}</b></h1>
+        </ion-text>
+      </div>
+      <div class="money-info">
+        <div class="exp-threshold">
+          <ion-text color="primary">
+            <h2>Umbral de gasto</h2>
+            <h1>{{monthBudget.income*monthBudget.expenseRatio/100 | currency}}</h1>
+          </ion-text>
+        </div>
+        <div class="money-remaining">
+          <ion-text color="primary">
+            <h2>Dinero restante</h2>
+            <h1>{{(monthBudget.income*monthBudget.expenseRatio/100) - totalExpenses | currency}}</h1>
+          </ion-text>
+        </div>
+      </div>
+    </ion-card>
+
+    <ion-card class="expenses-card">
+      <div class="table-container">
+        <table *ngIf="expenses.length > 0; else noExpenses" id="expenses-table">
+          <thead>
+            <tr>
+              <th id="date">Fecha</th>
+              <th id="description">Descripción</th>
+              <th id="category">Categoría</th>
+              <th id="value">Valor</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let exp of expenses">
+              <td class="exp-date">{{exp.date | date:'dd/MM'}}</td>
+              <td class="exp-description">{{exp.description}}</td>
+              <td class="exp-category">{{exp.category}}</td>
+              <td class="exp-value">{{exp.value | currency}}</td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="3" class="total-label">Total</td>
+              <td class="exp-total">{{ totalExpenses | currency }}</td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
       <ng-template #noExpenses>
         <ion-text>Ningún gasto registrado en {{monthServ.SelMonth | monthSpanish}}</ion-text>
       </ng-template>
-    </div>
-    <ng-template #noBudget>
+    </ion-card>
+
+    <ion-button expand="block" (click)="openExpenseModal()">Cargar nuevo gasto</ion-button>
+  </div>
+  <ng-template #noBudget>
+    <ion-card>
       <ion-text>No hay nada registrado para el mes de {{monthServ.SelMonth | monthSpanish}}</ion-text>
 
       <ion-button (click)="getUserBudget()">Agregue los datos para el mes</ion-button>
-    </ng-template>
-  </ion-card>
+    </ion-card>
+  </ng-template>
 </div>

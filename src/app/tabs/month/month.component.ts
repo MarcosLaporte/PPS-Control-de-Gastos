@@ -1,6 +1,5 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { IonModal, ModalController, NavController } from '@ionic/angular';
-import { OverlayEventDetail } from '@ionic/core/components';
+import { Component, OnInit } from '@angular/core';
+import { ModalController, NavController } from '@ionic/angular';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { Budget, Expense } from 'src/app/interfaces';
 import { MonthSpanishPipe } from 'src/app/month-spanish.pipe';
@@ -29,6 +28,7 @@ const defaultExpCategories = [
 export class MonthComponent implements OnInit {
   monthBudget: Budget | undefined;
   expenses: Expense[] = [];
+  totalExpenses: number = 0;
 
   constructor(
     private db: DatabaseService,
@@ -44,22 +44,13 @@ export class MonthComponent implements OnInit {
   }
 
   async ngOnInit() {
-    /* this.monthBudget = {
-      "id": "qYi8lDdG3iMeYtGAjuTF",
-      "userId": "efyWYJnzXLzytVxOenOB",
-      "income": 650000,
-      "expenseRatio": 25,
-      "month": 4,
-      "year": 2024,
-      // "expenses": [],
-      "expenseCategories": defaultExpCategories
-    }; */ //Hardcode data for test
     const budget = await this.getUserBudget();
     if (budget) {
       this.monthBudget = budget;
       this.expenses = (await this.db.getData<Expense>('expenses', 'date'))
-        .map((res) => this.timestampParse(res))
-        .filter((res) => res.budgetId === this.monthBudget!.id && res.date.getMonth() === this.monthBudget!.month);
+      .map((res) => this.timestampParse(res))
+      .filter((res) => res.budgetId === this.monthBudget!.id && res.date.getMonth() === this.monthBudget!.month);
+      this.totalExpenses = this.getTotalExpenses();
       this.monthServ.CompIsUpdated = true;
     } else {
       ToastError.fire('Operación cancelada.');
@@ -152,6 +143,10 @@ export class MonthComponent implements OnInit {
     });
   }
 
+  readonly getTotalExpenses = (): number => {
+    return this.expenses.reduce((total, exp) => total + exp.value, 0);
+  }
+
   async openExpenseModal() {
     const modal = await this.modalCtrl.create({
       component: NewExpenseComponent,
@@ -166,6 +161,7 @@ export class MonthComponent implements OnInit {
     if (role === 'confirm') {
       this.expenses.push(data);
       ToastSuccess.fire('Gasto agregado!');
+      this.totalExpenses = this.getTotalExpenses();
     }
   }
 }
