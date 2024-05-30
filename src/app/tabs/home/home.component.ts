@@ -23,7 +23,7 @@ export class HomeComponent {
   onDidDismiss(event: CustomEvent) {
     if (event.detail.role === 'confirm') {
       this.monthServ.SelMonth = event.detail.data;
-      this.navCtrl.navigateForward('tabs/month')
+      this.navCtrl.navigateForward('tabs/month');
     }
 
     this.selMonth = this.monthServ.SelMonth;

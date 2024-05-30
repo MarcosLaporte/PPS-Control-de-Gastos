@@ -1,5 +1,14 @@
 <div class="container bg-img">
-  <ion-text color="tertiary">
-    <h1 style="font-weight: bolder;">{{month | monthSpanish:'long'}}</h1>
-  </ion-text>
+  <ion-card>
+    <div *ngIf="monthBudget; else noBudget" class="budget">
+      <ion-text color="tertiary">
+        <h1 style="font-weight: bolder;">{{monthServ.SelMonth | monthSpanish}}</h1>
+      </ion-text>
+    </div>
+    <ng-template #noBudget>
+      No hay nada registrado para el mes de {{monthServ.SelMonth | monthSpanish}}
+
+      <ion-button (click)="getUserBudget()">Agregue los datos para el mes</ion-button>
+    </ng-template>
+  </ion-card>
 </div>

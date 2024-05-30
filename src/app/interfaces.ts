@@ -33,20 +33,21 @@ export interface Budget {
   month: number, // 0-11
   year: number,
   income: number,
-  expenseRatio: number // >0-100
+  expenseRatio: number, // >0-100
+  expenses: Expense[]
 }
 
 export interface Expense {
   id: string,
-  date: Date,
+  day: number,
   category: string,
   description: string,
   value: number,
 }
 
-export interface UserExpenses {
+/* export interface UserExpenses {
   id: string,
   budgetId: string,
   // expenses: Expense[]
   expensesId: string[]
-}
+} */
