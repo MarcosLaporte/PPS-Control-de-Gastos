@@ -15,7 +15,7 @@ export class SplashPage {
       audio.play();
     }, 3250);
 
-    const route = inject(AuthService).UserInSession ? '/home' : '/login';
+    const route = inject(AuthService).UserInSession ? '/tabs/home' : '/login';
     setTimeout(() => {
       navCtrl.navigateRoot(route);
       history.pushState(null, '');
