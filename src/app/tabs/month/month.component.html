@@ -4,9 +4,29 @@
       <ion-text color="tertiary">
         <h1 style="font-weight: bolder;">{{monthServ.SelMonth | monthSpanish}}</h1>
       </ion-text>
+      <ion-button expand="block" (click)="openExpenseModal()">Cargar nuevo gasto</ion-button>
+      <table *ngIf="expenses.length > 0; else noExpenses" id="expenses-table">
+        <thead>
+          <th>Fecha</th>
+          <th>Descripción</th>
+          <th>Categoría</th>
+          <th>Valor</th>
+        </thead>
+        <tbody>
+          <tr *ngFor="let exp of expenses">
+            <td class="exp-date">{{exp.date | date:'dd/MM'}}</td>
+            <td class="exp-description">{{exp.description}}</td>
+            <td class="exp-category">{{exp.category}}</td>
+            <td class="exp-value">{{exp.value}}</td>
+          </tr>
+        </tbody>
+      </table>
+      <ng-template #noExpenses>
+        <ion-text>Ningún gasto registrado en {{monthServ.SelMonth | monthSpanish}}</ion-text>
+      </ng-template>
     </div>
     <ng-template #noBudget>
-      No hay nada registrado para el mes de {{monthServ.SelMonth | monthSpanish}}
+      <ion-text>No hay nada registrado para el mes de {{monthServ.SelMonth | monthSpanish}}</ion-text>
 
       <ion-button (click)="getUserBudget()">Agregue los datos para el mes</ion-button>
     </ng-template>

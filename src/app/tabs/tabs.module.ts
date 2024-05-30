@@ -10,6 +10,7 @@ import { MonthSpanishPipe } from '../month-spanish.pipe';
 import { HomeComponent } from './home/home.component';
 import { MonthComponent } from './month/month.component';
 import { GraphsComponent } from './graphs/graphs.component';
+import { NewExpenseComponent } from './new-expense/new-expense.component';
 
 @NgModule({
   imports: [
@@ -23,7 +24,8 @@ import { GraphsComponent } from './graphs/graphs.component';
     TabsPage,
     HomeComponent,
     MonthComponent,
-    GraphsComponent
+    GraphsComponent,
+    NewExpenseComponent
   ]
 })
 export class TabsPageModule {}

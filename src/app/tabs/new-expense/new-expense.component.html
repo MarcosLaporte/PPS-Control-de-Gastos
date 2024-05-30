@@ -1,0 +1,27 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="cancelModal()">Cancelar</ion-button>
+    </ion-buttons>
+    <ion-title>Nuevo gasto</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content class="ion-padding">
+  <ion-datetime presentation="date" [min]="firstDayISO!" [max]="lastDayISO!" [(ngModel)]="selDateISO">
+  </ion-datetime>
+  <ion-item>
+    <ion-select aria-label="Categoría" interface="popover" placeholder="Seleccione la categoría" [(ngModel)]="newExpense.category">
+      <ion-select-option *ngFor="let catg of budget.expenseCategories" [value]="catg">{{catg}}</ion-select-option>
+    </ion-select>
+  </ion-item>
+  <ion-item>
+    <ion-input type="number" min="0" step="500" label="Valor en $" labelPlacement="stacked"
+      [(ngModel)]="newExpense.value"></ion-input>
+  </ion-item>
+  <ion-item>
+    <ion-input type="text" maxlength="30" label="Descripción del gasto" labelPlacement="stacked" placeholder="1kg de helado"
+      [(ngModel)]="newExpense.description"></ion-input>
+  </ion-item>
+
+  <ion-button (click)="saveExpense()">Guardar</ion-button>
+</ion-content>

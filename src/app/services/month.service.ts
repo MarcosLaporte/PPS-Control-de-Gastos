@@ -17,4 +17,15 @@ export class MonthService {
 
     this._selMonthSub.next(month);
   }
+
+  private _componentIsUpdatedSub = new BehaviorSubject<boolean>(false);
+  public componentIsUpdatedObs = this._componentIsUpdatedSub.asObservable();
+
+  public get CompIsUpdated() {
+    return this._componentIsUpdatedSub.getValue();
+  }
+  public set CompIsUpdated(value: boolean) {
+
+    this._componentIsUpdatedSub.next(value);
+  }
 }

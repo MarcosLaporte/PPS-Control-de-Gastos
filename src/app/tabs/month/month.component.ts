@@ -1,14 +1,26 @@
-import { Component, OnInit } from '@angular/core';
-import { NavController } from '@ionic/angular';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { IonModal, ModalController, NavController } from '@ionic/angular';
+import { OverlayEventDetail } from '@ionic/core/components';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { Budget } from 'src/app/interfaces';
+import { Budget, Expense } from 'src/app/interfaces';
 import { MonthSpanishPipe } from 'src/app/month-spanish.pipe';
 import { AuthService } from 'src/app/services/auth.service';
 import { DatabaseService } from 'src/app/services/database.service';
 import { MonthService } from 'src/app/services/month.service';
-import { MySwal, ToastError } from 'src/app/utils';
+import { MySwal, ToastError, ToastSuccess } from 'src/app/utils';
+import { NewExpenseComponent } from '../new-expense/new-expense.component';
+import { Timestamp } from '@angular/fire/firestore';
 
 const monthSpanishPipe = new MonthSpanishPipe();
+const defaultExpCategories = [
+  'Alimentación',
+  'Cuentas y pagos',
+  'Casa',
+  'Transporte',
+  'Ropa',
+  'Salud',
+  'Diversión'
+];
 @Component({
   selector: 'app-month',
   templateUrl: './month.component.html',
@@ -16,6 +28,7 @@ const monthSpanishPipe = new MonthSpanishPipe();
 })
 export class MonthComponent implements OnInit {
   monthBudget: Budget | undefined;
+  expenses: Expense[] = [];
 
   constructor(
     private db: DatabaseService,
@@ -23,16 +36,40 @@ export class MonthComponent implements OnInit {
     protected monthServ: MonthService,
     private spinner: NgxSpinnerService,
     private navCtrl: NavController,
-  ) { }
+    private modalCtrl: ModalController,
+  ) {
+    monthServ.componentIsUpdatedObs.subscribe((isUpdated) => {
+      if (!isUpdated) this.monthBudget = undefined;
+    });
+  }
 
   async ngOnInit() {
+    /* this.monthBudget = {
+      "id": "qYi8lDdG3iMeYtGAjuTF",
+      "userId": "efyWYJnzXLzytVxOenOB",
+      "income": 650000,
+      "expenseRatio": 25,
+      "month": 4,
+      "year": 2024,
+      // "expenses": [],
+      "expenseCategories": defaultExpCategories
+    }; */ //Hardcode data for test
     const budget = await this.getUserBudget();
-    if (budget)
+    if (budget) {
       this.monthBudget = budget;
-    else {
+      this.expenses = (await this.db.getData<Expense>('expenses', 'date'))
+        .map((res) => this.timestampParse(res))
+        .filter((res) => res.budgetId === this.monthBudget!.id && res.date.getMonth() === this.monthBudget!.month);
+      this.monthServ.CompIsUpdated = true;
+    } else {
       ToastError.fire('Operación cancelada.');
       this.navCtrl.navigateBack('tabs/home');
     }
+  }
+
+  readonly timestampParse = (exp: Expense) => {
+    exp.date = exp.date instanceof Timestamp ? exp.date.toDate() : exp.date;
+    return exp;
   }
 
   async getUserBudget(): Promise<Budget | undefined> {
@@ -60,11 +97,11 @@ export class MonthComponent implements OnInit {
             year: new Date().getFullYear(),
             income: data!.income,
             expenseRatio: data!.expenseRatio,
-            expenses: []
+            expenseCategories: defaultExpCategories
           };
 
-          const budgetId = await this.db.addData('budgets', newBudget, true);
-          // this.db.addData('userExpenses', { budgetId: budgetId, expensesId: [] }, true);
+          const budId = await this.db.addData('budgets', newBudget, true);
+          newBudget.id = budId;
           return data ? newBudget : undefined;
         });
     } finally {
@@ -113,5 +150,22 @@ export class MonthComponent implements OnInit {
     }).then(async (res) => {
       return res.value;
     });
+  }
+
+  async openExpenseModal() {
+    const modal = await this.modalCtrl.create({
+      component: NewExpenseComponent,
+      componentProps: {
+        budget: this.monthBudget
+      }
+    });
+    modal.present();
+
+    const { data, role } = await modal.onWillDismiss();
+
+    if (role === 'confirm') {
+      this.expenses.push(data);
+      ToastSuccess.fire('Gasto agregado!');
+    }
   }
 }

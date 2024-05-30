@@ -17,6 +17,7 @@ export class HomeComponent {
   }
 
   onIonChange(event: CustomEvent) {
+    if (event.detail.value !== this.selMonth) this.monthServ.CompIsUpdated = false;
     this.selMonth = event.detail.value;
   }
 

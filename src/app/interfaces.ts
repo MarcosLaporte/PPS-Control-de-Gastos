@@ -34,20 +34,32 @@ export interface Budget {
   year: number,
   income: number,
   expenseRatio: number, // >0-100
-  expenses: Expense[]
+  expenseCategories: string[]
 }
 
-export interface Expense {
+export interface IExpense {
   id: string,
-  day: number,
+  budgetId: string,
+  date: Date,
   category: string,
   description: string,
   value: number,
 }
+export class Expense {
+  id: string;
+  budgetId: string;
+  date: Date;
+  category: string;
+  description: string;
+  value: number;
 
-/* export interface UserExpenses {
-  id: string,
-  budgetId: string,
-  // expenses: Expense[]
-  expensesId: string[]
-} */
+  constructor(exp?: IExpense) {
+    this.id = exp?.id ?? '';
+    this.budgetId = exp?.budgetId ?? '';
+    this.date = exp?.date ?? new Date();
+    this.category = exp?.category ?? '';
+    this.description = exp?.description ?? '';
+    this.value = exp?.value ?? 0;
+  }
+
+}
