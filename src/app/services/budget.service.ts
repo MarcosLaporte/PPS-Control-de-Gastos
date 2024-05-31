@@ -59,5 +59,26 @@ export class BudgetService {
   public set Expenses(expenses: Expense[]) {
     this._expensesBS.next(expenses);
   }
+
+  sortExpenses(fieldSortBy: 'date' | 'category' | 'description' | 'value', order: 'asc' | 'desc' = 'asc') {
+    this.Expenses = this.Expenses.sort((exp1, exp2) => {
+      let value1 = exp1[fieldSortBy];
+      let value2 = exp2[fieldSortBy];
+  
+      // Convert Date objects to timestamps for comparison
+      if (fieldSortBy === 'date') {
+        value1 = new Date(value1).getTime();
+        value2 = new Date(value2).getTime();
+      }
+  
+      // Compare values based on the order
+      if (order === 'asc') {
+        return value1 > value2 ? 1 : value1 < value2 ? -1 : 0;
+      } else {
+        return value1 < value2 ? 1 : value1 > value2 ? -1 : 0;
+      }
+    });
+  }
+  
   //#endregion
 }

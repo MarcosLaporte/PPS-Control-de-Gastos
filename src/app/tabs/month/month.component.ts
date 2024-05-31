@@ -168,6 +168,21 @@ export class MonthComponent implements OnInit {
         });
       else
         ToastSuccess.fire('Gasto agregado!');
+
+      this.budgetServ.sortExpenses(this.fieldOrderBy, this.order);
     }
+  }
+  
+  fieldOrderBy: 'date' | 'category' | 'description' | 'value' = 'date';
+  order: 'asc' | 'desc' = 'asc';
+  toggleOrder(field: 'date' | 'category' | 'description' | 'value') {
+    if (this.fieldOrderBy === field) {
+      this.order = this.order === 'asc' ? 'desc' : 'asc';
+    } else {
+      this.fieldOrderBy = field;
+      this.order = 'asc';
+    }
+
+    this.budgetServ.sortExpenses(this.fieldOrderBy, this.order);
   }
 }

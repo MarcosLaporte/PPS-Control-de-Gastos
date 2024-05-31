@@ -28,10 +28,10 @@
         <table *ngIf="budgetServ.Expenses.length > 0; else noExpenses" id="expenses-table">
           <thead>
             <tr>
-              <th id="date">Fecha</th>
-              <th id="description">Descripción</th>
-              <th id="category">Categoría</th>
-              <th id="value">Valor</th>
+              <th id="date" (click)="toggleOrder('date')">Fecha</th>
+              <th id="description" (click)="toggleOrder('description')">Descripción</th>
+              <th id="category" (click)="toggleOrder('category')">Categoría</th>
+              <th id="value" (click)="toggleOrder('value')">Valor</th>
             </tr>
           </thead>
           <tbody>
