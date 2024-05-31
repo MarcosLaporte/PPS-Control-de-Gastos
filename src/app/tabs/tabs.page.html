@@ -11,7 +11,7 @@
       <ion-label>{{selMonth | monthSpanish:'long'}}</ion-label>
     </ion-tab-button>
 
-    <ion-tab-button tab="graphs" href="/tabs/graphs">
+    <ion-tab-button tab="graphs" href="/tabs/graphs" [style.display]="budgetServ.Budget ? 'block' : 'none'">
       <ion-icon aria-hidden="true" name="stats-chart-sharp"></ion-icon>
       <ion-label>Gráficos</ion-label>
     </ion-tab-button>

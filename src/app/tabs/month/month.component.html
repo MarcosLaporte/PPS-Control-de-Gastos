@@ -1,22 +1,23 @@
 <div class="container bg-img">
-  <div *ngIf="monthBudget; else noBudget" class="budget">
+  <div *ngIf="budgetServ.Budget; else noBudget" class="budget">
     <ion-card id="header-card" class="ion-padding">
       <div class="month-header">
         <ion-text color="tertiary">
-          <h1><b>{{monthServ.SelMonth | monthSpanish | uppercase}}</b></h1>
+          <!-- <h1><b>{{budgetServ.SelMonth | monthSpanish | uppercase}}</b></h1> -->
+          <h1><b>Ingreso de Mayo: {{budgetServ.Budget.income | currency}}</b></h1>
         </ion-text>
       </div>
       <div class="money-info">
         <div class="exp-threshold">
           <ion-text color="primary">
             <h2>Umbral de gasto</h2>
-            <h1>{{monthBudget.income*monthBudget.expenseRatio/100 | currency}}</h1>
+            <h1>{{budgetServ.expenseThreshold | currency}}</h1>
           </ion-text>
         </div>
         <div class="money-remaining">
           <ion-text color="primary">
             <h2>Dinero restante</h2>
-            <h1>{{(monthBudget.income*monthBudget.expenseRatio/100) - totalExpenses | currency}}</h1>
+            <h1>{{budgetServ.expenseThreshold - totalExpenses | currency}}</h1>
           </ion-text>
         </div>
       </div>
@@ -24,7 +25,7 @@
 
     <ion-card class="expenses-card">
       <div class="table-container">
-        <table *ngIf="expenses.length > 0; else noExpenses" id="expenses-table">
+        <table *ngIf="budgetServ.Expenses.length > 0; else noExpenses" id="expenses-table">
           <thead>
             <tr>
               <th id="date">Fecha</th>
@@ -34,7 +35,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let exp of expenses">
+            <tr *ngFor="let exp of budgetServ.Expenses">
               <td class="exp-date">{{exp.date | date:'dd/MM'}}</td>
               <td class="exp-description">{{exp.description}}</td>
               <td class="exp-category">{{exp.category}}</td>
@@ -50,7 +51,7 @@
         </table>
       </div>
       <ng-template #noExpenses>
-        <ion-text>Ningún gasto registrado en {{monthServ.SelMonth | monthSpanish}}</ion-text>
+        <ion-text>Ningún gasto registrado en {{budgetServ.SelMonth | monthSpanish}}</ion-text>
       </ng-template>
     </ion-card>
 
@@ -58,7 +59,7 @@
   </div>
   <ng-template #noBudget>
     <ion-card>
-      <ion-text>No hay nada registrado para el mes de {{monthServ.SelMonth | monthSpanish}}</ion-text>
+      <ion-text>No hay nada registrado para el mes de {{budgetServ.SelMonth | monthSpanish}}</ion-text>
 
       <ion-button (click)="getUserBudget()">Agregue los datos para el mes</ion-button>
     </ion-card>

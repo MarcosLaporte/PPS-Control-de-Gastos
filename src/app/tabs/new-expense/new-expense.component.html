@@ -12,7 +12,7 @@
   <ion-item>
     <ion-select aria-label="Categoría" interface="popover" placeholder="Seleccione la categoría"
       [(ngModel)]="newExpense.category">
-      <ion-select-option *ngFor="let catg of budget.expenseCategories" [value]="catg">{{catg}}</ion-select-option>
+      <ion-select-option *ngFor="let catg of budgetServ.Budget!.expenseCategories" [value]="catg">{{catg}}</ion-select-option>
     </ion-select>
     <ion-button (click)="showCategoryInput = !showCategoryInput"  [style.display]="showCategoryInput ? 'none' : 'inline-block'">
       <ion-icon name="add-circle-outline"></ion-icon>

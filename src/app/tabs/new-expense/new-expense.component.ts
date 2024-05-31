@@ -1,6 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
+import { NgxSpinnerService } from 'ngx-spinner';
 import { Budget, Expense } from 'src/app/interfaces';
+import { BudgetService } from 'src/app/services/budget.service';
 import { DatabaseService } from 'src/app/services/database.service';
 import { MySwal, ToastError } from 'src/app/utils';
 
@@ -10,42 +12,44 @@ import { MySwal, ToastError } from 'src/app/utils';
   styleUrls: ['./new-expense.component.scss'],
 })
 export class NewExpenseComponent implements OnInit {
-  budget!: Budget;
   newExpense: Expense = new Expense();
   protected selDateISO?: string;
   protected firstDayISO?: string;
   protected lastDayISO?: string;
 
-  constructor(private modalCtrl: ModalController, private db: DatabaseService) { }
+  constructor(private modalCtrl: ModalController, protected budgetServ: BudgetService, private db: DatabaseService, private spinner: NgxSpinnerService) { }
 
   ngOnInit() {
-    if (!this.budget) {
+    if (!this.budgetServ.Budget) {
       this.cancelModal();
       throw new Error('No budget provided.');
     }
 
     this.selDateISO = this.newExpense.date.toISOString();
-    this.firstDayISO = new Date(this.budget.year, this.budget.month, 1).toISOString();
-    const amountDays = new Date(this.budget.year, this.budget.month + 1, 0).getDate();
-    this.lastDayISO = new Date(this.budget.year, this.budget.month, amountDays).toISOString();
+    this.firstDayISO = new Date(this.budgetServ.Budget.year, this.budgetServ.Budget.month, 1).toISOString();
+    const amountDays = new Date(this.budgetServ.Budget.year, this.budgetServ.Budget.month + 1, 0).getDate();
+    this.lastDayISO = new Date(this.budgetServ.Budget.year, this.budgetServ.Budget.month, amountDays).toISOString();
   }
 
   showCategoryInput: boolean = false;
   newCategory: string = '';
-  addNewCategory() {
+  async addNewCategory() {
     try {
+      this.spinner.show();
       if (!this.newCategory || this.newCategory.length === 0)
         throw new Error('Escriba algo!');
-      else if (this.budget.expenseCategories.includes(this.newCategory))
+      else if (this.budgetServ.Budget!.expenseCategories.includes(this.newCategory))
         throw new Error('Esta categoría ya existe.');
 
-      this.budget.expenseCategories.push(this.newCategory);
+      this.budgetServ.Budget!.expenseCategories.push(this.newCategory);
       this.newExpense.category = this.newCategory;
       this.showCategoryInput = false;
       this.newCategory = '';
 
-      this.db.updateDoc('budgets', this.budget.id, { expenseCategories: this.budget.expenseCategories });
+      await this.db.updateDoc('budgets', this.budgetServ.Budget!.id, { expenseCategories: this.budgetServ.Budget!.expenseCategories });
+      this.spinner.hide();
     } catch (error: any) {
+      this.spinner.hide();
       ToastError.fire('Ups..', error.message);
     }
   }
@@ -68,7 +72,7 @@ export class NewExpenseComponent implements OnInit {
 
   async saveExpense() {
     this.newExpense.date = new Date(this.selDateISO!);
-    this.newExpense.budgetId = this.budget.id;
+    this.newExpense.budgetId = this.budgetServ.Budget!.id;
 
     if (!this.newExpense.category || this.newExpense.value < 0 || !this.newExpense.description) {
       ToastError.fire('Revise los campos.');

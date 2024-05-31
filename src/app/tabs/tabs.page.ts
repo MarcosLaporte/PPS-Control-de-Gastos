@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { MonthService } from '../services/month.service';
+import { BudgetService } from '../services/budget.service';
 
 @Component({
   selector: 'app-tabs',
@@ -9,9 +9,9 @@ import { MonthService } from '../services/month.service';
 export class TabsPage {
   selMonth: number;
 
-  constructor(private monthServ: MonthService) {
-    this.selMonth = monthServ.SelMonth;
+  constructor(protected budgetServ: BudgetService) {
+    this.selMonth = budgetServ.SelMonth;
 
-    monthServ.selMonthObs.subscribe((value) => this.selMonth = value);
+    budgetServ.selMonthObs.subscribe((value) => this.selMonth = value);
   }
 }

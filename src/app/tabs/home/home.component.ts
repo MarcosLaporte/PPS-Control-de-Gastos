@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { spMonths } from 'src/app/interfaces';
-import { MonthService } from 'src/app/services/month.service'; 
+import { BudgetService } from 'src/app/services/budget.service';
 import { NavController } from '@ionic/angular';
 
 @Component({
@@ -12,21 +12,21 @@ export class HomeComponent {
   selMonth: number;
   readonly spMonths = spMonths;
 
-  constructor(private monthServ: MonthService, private navCtrl: NavController) {
-    this.selMonth = monthServ.SelMonth;
+  constructor(private budgetServ: BudgetService, private navCtrl: NavController) {
+    this.selMonth = budgetServ.SelMonth;
   }
 
   onIonChange(event: CustomEvent) {
-    if (event.detail.value !== this.selMonth) this.monthServ.CompIsUpdated = false;
+    if (event.detail.value !== this.selMonth) this.budgetServ.CompIsUpdated = false;
     this.selMonth = event.detail.value;
   }
 
   onDidDismiss(event: CustomEvent) {
     if (event.detail.role === 'confirm') {
-      this.monthServ.SelMonth = event.detail.data;
+      this.budgetServ.SelMonth = event.detail.data;
       this.navCtrl.navigateForward('tabs/month');
     }
 
-    this.selMonth = this.monthServ.SelMonth;
+    this.selMonth = this.budgetServ.SelMonth;
   }
 }

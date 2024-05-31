@@ -5,8 +5,8 @@ import { Budget, Expense } from 'src/app/interfaces';
 import { MonthSpanishPipe } from 'src/app/month-spanish.pipe';
 import { AuthService } from 'src/app/services/auth.service';
 import { DatabaseService } from 'src/app/services/database.service';
-import { MonthService } from 'src/app/services/month.service';
-import { MySwal, ToastError, ToastSuccess } from 'src/app/utils';
+import { BudgetService } from 'src/app/services/budget.service';
+import { MySwal, ToastError, ToastSuccess, ToastWarning } from 'src/app/utils';
 import { NewExpenseComponent } from '../new-expense/new-expense.component';
 import { Timestamp } from '@angular/fire/firestore';
 
@@ -26,38 +26,38 @@ const defaultExpCategories = [
   styleUrls: ['./month.component.scss'],
 })
 export class MonthComponent implements OnInit {
-  monthBudget: Budget | undefined;
-  expenses: Expense[] = [];
   totalExpenses: number = 0;
 
   constructor(
     private db: DatabaseService,
     private auth: AuthService,
-    protected monthServ: MonthService,
+    protected budgetServ: BudgetService,
     private spinner: NgxSpinnerService,
     private navCtrl: NavController,
     private modalCtrl: ModalController,
   ) {
-    monthServ.componentIsUpdatedObs.subscribe((isUpdated) => {
-      if (!isUpdated) this.monthBudget = undefined;
+    budgetServ.componentIsUpdatedObs.subscribe((isUpdated) => {
+      if (!isUpdated) this.budgetServ.Budget = undefined;
     });
   }
 
   async ngOnInit() {
     const budget = await this.getUserBudget();
     if (budget) {
-      this.monthBudget = budget;
-      this.expenses = (await this.db.getData<Expense>('expenses', 'date'))
-      .map((res) => this.timestampParse(res))
-      .filter((res) => res.budgetId === this.monthBudget!.id && res.date.getMonth() === this.monthBudget!.month);
+      this.spinner.show();
+      this.budgetServ.Budget = budget;
+
+      this.budgetServ.Expenses = (await this.db.getData<Expense>('expenses', 'date'))
+        .map((res) => this.timestampParse(res))
+        .filter((res) => res.budgetId === this.budgetServ.Budget!.id && res.date.getMonth() === this.budgetServ.Budget!.month);
       this.totalExpenses = this.getTotalExpenses();
-      this.monthServ.CompIsUpdated = true;
+      this.budgetServ.CompIsUpdated = true;
+      this.spinner.hide();
     } else {
       ToastError.fire('Operación cancelada.');
       this.navCtrl.navigateBack('tabs/home');
     }
   }
-
   readonly timestampParse = (exp: Expense) => {
     exp.date = exp.date instanceof Timestamp ? exp.date.toDate() : exp.date;
     return exp;
@@ -70,7 +70,7 @@ export class MonthComponent implements OnInit {
       budget = await this.db.getData<Budget>('budgets')
         .then(async (budgets) => {
           for (const bud of budgets) {
-            if (bud.userId === this.auth.UserInSession!.id && bud.month === this.monthServ.SelMonth)
+            if (bud.userId === this.auth.UserInSession!.id && bud.month === this.budgetServ.SelMonth)
               return bud;
           }
 
@@ -84,7 +84,7 @@ export class MonthComponent implements OnInit {
           const newBudget: Budget = {
             id: '',
             userId: this.auth.UserInSession!.id,
-            month: this.monthServ.SelMonth,
+            month: this.budgetServ.SelMonth,
             year: new Date().getFullYear(),
             income: data!.income,
             expenseRatio: data!.expenseRatio,
@@ -105,7 +105,7 @@ export class MonthComponent implements OnInit {
   async createBudgetData(): Promise<{ income: number, expenseRatio: number } | undefined> {
     return await MySwal.fire({
       icon: 'info',
-      title: `No hay nada registrado para el mes de ${monthSpanishPipe.transform(this.monthServ.SelMonth)}`,
+      title: `No hay nada registrado para el mes de ${monthSpanishPipe.transform(this.budgetServ.SelMonth)}`,
       html: `
       <h2>A continuación rellene:</h2>
       <ion-item>
@@ -144,24 +144,30 @@ export class MonthComponent implements OnInit {
   }
 
   readonly getTotalExpenses = (): number => {
-    return this.expenses.reduce((total, exp) => total + exp.value, 0);
+    return this.budgetServ.Expenses.reduce((total, exp) => total + exp.value, 0);
   }
 
   async openExpenseModal() {
     const modal = await this.modalCtrl.create({
       component: NewExpenseComponent,
-      componentProps: {
-        budget: this.monthBudget
-      }
     });
     modal.present();
 
     const { data, role } = await modal.onWillDismiss();
 
     if (role === 'confirm') {
-      this.expenses.push(data);
-      ToastSuccess.fire('Gasto agregado!');
-      this.totalExpenses = this.getTotalExpenses();
+      this.budgetServ.Expenses.push(data);
+      this.totalExpenses += data.value;
+      if (this.totalExpenses > this.budgetServ.expenseThreshold * 0.2)
+        MySwal.fire({
+          icon: 'warning',
+          title: 'Alerta!',
+          text: 'Le queda menos del 20% de su dinero disponible para gastos.',
+          confirmButtonText: 'Cerrar',
+          timer: 5000
+        });
+      else
+        ToastSuccess.fire('Gasto agregado!');
     }
   }
 }
