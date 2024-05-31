@@ -1,3 +1,17 @@
-<div class="container">
-  <canvas id="expenses"></canvas>
+<div class="container bg-img">
+  <ion-segment [(ngModel)]="segment" (ionChange)="handleCharts()">
+    <ion-segment-button value="month">
+      <ion-label>Mes</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="year">
+      <ion-label>Año</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="savings">
+      <ion-label>Ahorros</ion-label>
+    </ion-segment-button>
+  </ion-segment>
+
+  <div class="chart-container">
+      <canvas id="chart"></canvas>
+  </div>
 </div>

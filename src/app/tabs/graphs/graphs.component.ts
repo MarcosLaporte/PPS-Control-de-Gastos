@@ -13,23 +13,34 @@ declare interface CategoryTotal {
   styleUrls: ['./graphs.component.scss'],
 })
 export class GraphsComponent implements AfterViewInit {
-  expensesChart?: Chart<"pie", number[], string>;
-  constructor(private budgetServ: BudgetService) {
-  }
+  segment: 'month' | 'year' | 'savings' = 'month';
+  globalChart?: Chart<"pie", number[], string>;
+  constructor(private budgetServ: BudgetService) { }
 
   ngAfterViewInit(): void {
     this.budgetServ.expensesObs.subscribe(() => {
-      if (this.expensesChart) this.expensesChart.destroy();
-
-      this.loadChart();
-    })
+      this.handleCharts();
+    });
   }
 
-  loadChart() {
-    const canvaEl = document.getElementById('expenses')! as HTMLCanvasElement;
+  readonly handleCharts = () => {
+    switch (this.segment) {
+      case 'month':
+      case 'year':
+        if (this.globalChart) this.globalChart.destroy();
+        this.globalChart = this.loadExpensesChart(this.segment);
+        break;
+      case 'savings':
+        break;
+    }
+  };
 
-    const data = this.calculateCategoryTotals(this.budgetServ.Expenses);
-    this.expensesChart = new Chart(canvaEl, {
+  loadExpensesChart(period: 'month' | 'year') {
+    const canvaEl = document.getElementById('chart')! as HTMLCanvasElement;
+
+    const expenses = period === 'year' ? this.budgetServ.Expenses : this.budgetServ.MonthExpenses;
+    const data = this.calculateCategoryTotals(expenses);
+    return new Chart(canvaEl, {
       type: 'pie',
       data: {
         labels: data.map(row => row.category),
@@ -38,6 +49,19 @@ export class GraphsComponent implements AfterViewInit {
           data: data.map(row => row.totalValue),
           backgroundColor: this.getRandomColors(data.length)
         }]
+      },
+      options: {
+        plugins: {
+          legend: {
+            labels: {
+              color: '#e6eb84',
+              font: {
+                size: 16,
+                weight: 'bolder'
+              }
+            }
+          }
+        }
       }
     });
   }
@@ -62,7 +86,7 @@ export class GraphsComponent implements AfterViewInit {
     const colors = [];
 
     for (let i = 0; i < amount; i++) {
-      const randomColor = `hsl(${360 * Math.random()},${25 + 70 * Math.random()}%,${85 + 10 * Math.random()}%`;
+      const randomColor = `hsl(${360 * Math.random()},${25 + 70 * Math.random()}%,${55 + 10 * Math.random()}%`;
       colors.push(randomColor);
     }
 
