@@ -17,12 +17,12 @@ export class HomeComponent {
   }
 
   onIonChange(event: CustomEvent) {
-    if (event.detail.value !== this.selMonth) this.budgetServ.CompIsUpdated = false;
     this.selMonth = event.detail.value;
   }
-
+  
   onDidDismiss(event: CustomEvent) {
     if (event.detail.role === 'confirm') {
+      if (event.detail.value !== this.selMonth) this.budgetServ.CompIsUpdated = false;
       this.budgetServ.SelMonth = event.detail.data;
       this.navCtrl.navigateForward('tabs/month');
     }

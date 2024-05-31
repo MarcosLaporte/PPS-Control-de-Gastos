@@ -25,7 +25,6 @@ export class NewExpenseComponent implements OnInit {
       throw new Error('No budget provided.');
     }
 
-    this.selDateISO = this.newExpense.date.toISOString();
     this.firstDayISO = new Date(this.budgetServ.Budget.year, this.budgetServ.Budget.month, 1).toISOString();
     const amountDays = new Date(this.budgetServ.Budget.year, this.budgetServ.Budget.month + 1, 0).getDate();
     this.lastDayISO = new Date(this.budgetServ.Budget.year, this.budgetServ.Budget.month, amountDays).toISOString();
@@ -73,6 +72,7 @@ export class NewExpenseComponent implements OnInit {
   async saveExpense() {
     this.newExpense.date = new Date(this.selDateISO!);
     this.newExpense.budgetId = this.budgetServ.Budget!.id;
+    this.newExpense.userId = this.budgetServ.Budget!.userId;
 
     if (!this.newExpense.category || this.newExpense.value < 0 || !this.newExpense.description) {
       ToastError.fire('Revise los campos.');

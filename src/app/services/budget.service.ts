@@ -58,6 +58,12 @@ export class BudgetService {
   }
   public set Expenses(expenses: Expense[]) {
     this._expensesBS.next(expenses);
+    this._monthExpenses = expenses.filter((exp) => exp.date.getMonth() === this.SelMonth);
+  }
+  
+  private _monthExpenses: Expense[] = [];
+  public get MonthExpenses() {
+    return this._monthExpenses;
   }
 
   sortExpenses(fieldSortBy: 'date' | 'category' | 'description' | 'value', order: 'asc' | 'desc' = 'asc') {

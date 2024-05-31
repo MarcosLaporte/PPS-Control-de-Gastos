@@ -40,6 +40,7 @@ export interface Budget {
 export interface IExpense {
   id: string,
   budgetId: string,
+  userId: string,
   date: Date,
   category: string,
   description: string,
@@ -48,6 +49,7 @@ export interface IExpense {
 export class Expense {
   id: string;
   budgetId: string;
+  userId: string;
   date: Date;
   category: string;
   description: string;
@@ -56,6 +58,7 @@ export class Expense {
   constructor(exp?: IExpense) {
     this.id = exp?.id ?? '';
     this.budgetId = exp?.budgetId ?? '';
+    this.userId = exp?.userId ?? '';
     this.date = exp?.date ?? new Date();
     this.category = exp?.category ?? '';
     this.description = exp?.description ?? '';

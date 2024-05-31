@@ -4,7 +4,8 @@
       <div class="month-header">
         <ion-text color="tertiary">
           <!-- <h1><b>{{budgetServ.SelMonth | monthSpanish | uppercase}}</b></h1> -->
-          <h1><b>Ingreso de Mayo: {{budgetServ.Budget.income | currency}}</b></h1>
+          <h1><b>Ingreso de <b>{{budgetServ.SelMonth | monthSpanish | uppercase}}</b>:
+              {{budgetServ.Budget.income | currency}}</b></h1>
         </ion-text>
       </div>
       <div class="money-info">
@@ -25,7 +26,7 @@
 
     <ion-card class="expenses-card">
       <div class="table-container">
-        <table *ngIf="budgetServ.Expenses.length > 0; else noExpenses" id="expenses-table">
+        <table *ngIf="budgetServ.MonthExpenses.length > 0; else noExpenses" id="expenses-table">
           <thead>
             <tr>
               <th id="date" (click)="toggleOrder('date')">Fecha</th>
@@ -35,7 +36,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let exp of budgetServ.Expenses">
+            <tr *ngFor="let exp of budgetServ.MonthExpenses">
               <td class="exp-date">{{exp.date | date:'dd/MM'}}</td>
               <td class="exp-description">{{exp.description}}</td>
               <td class="exp-category">{{exp.category}}</td>
@@ -61,7 +62,7 @@
     <ion-card>
       <ion-text>No hay nada registrado para el mes de {{budgetServ.SelMonth | monthSpanish}}</ion-text>
 
-      <ion-button (click)="getUserBudget()">Agregue los datos para el mes</ion-button>
+      <ion-button (click)="setupData()">Agregue los datos para el mes</ion-button>
     </ion-card>
   </ng-template>
 </div>

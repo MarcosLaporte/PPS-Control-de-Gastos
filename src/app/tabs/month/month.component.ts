@@ -1,12 +1,12 @@
-import { Component, OnInit } from '@angular/core';
-import { ModalController, NavController } from '@ionic/angular';
+import { Component } from '@angular/core';
+import { ModalController } from '@ionic/angular';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { Budget, Expense } from 'src/app/interfaces';
 import { MonthSpanishPipe } from 'src/app/month-spanish.pipe';
 import { AuthService } from 'src/app/services/auth.service';
 import { DatabaseService } from 'src/app/services/database.service';
 import { BudgetService } from 'src/app/services/budget.service';
-import { MySwal, ToastError, ToastSuccess, ToastWarning } from 'src/app/utils';
+import { MySwal, ToastSuccess, ToastWarning } from 'src/app/utils';
 import { NewExpenseComponent } from '../new-expense/new-expense.component';
 import { Timestamp } from '@angular/fire/firestore';
 
@@ -25,7 +25,7 @@ const defaultExpCategories = [
   templateUrl: './month.component.html',
   styleUrls: ['./month.component.scss'],
 })
-export class MonthComponent implements OnInit {
+export class MonthComponent {
   totalExpenses: number = 0;
 
   constructor(
@@ -33,31 +33,30 @@ export class MonthComponent implements OnInit {
     private auth: AuthService,
     protected budgetServ: BudgetService,
     private spinner: NgxSpinnerService,
-    private navCtrl: NavController,
     private modalCtrl: ModalController,
   ) {
-    budgetServ.componentIsUpdatedObs.subscribe((isUpdated) => {
-      if (!isUpdated) this.budgetServ.Budget = undefined;
+    this.budgetServ.componentIsUpdatedObs.subscribe((isUpdated) => {
+      if (!isUpdated) this.setupData();
     });
   }
 
-  async ngOnInit() {
-    const budget = await this.getUserBudget();
-    if (budget) {
-      this.spinner.show();
-      this.budgetServ.Budget = budget;
+  async setupData() {
+    this.budgetServ.Budget = await this.getUserBudget();
+    console.log(this.budgetServ.Budget);
+    
+    if (!this.budgetServ.Budget) return;
 
-      this.budgetServ.Expenses = (await this.db.getData<Expense>('expenses', 'date'))
-        .map((res) => this.timestampParse(res))
-        .filter((res) => res.budgetId === this.budgetServ.Budget!.id && res.date.getMonth() === this.budgetServ.Budget!.month);
-      this.totalExpenses = this.getTotalExpenses();
-      this.budgetServ.CompIsUpdated = true;
-      this.spinner.hide();
-    } else {
-      ToastError.fire('Operación cancelada.');
-      this.navCtrl.navigateBack('tabs/home');
-    }
+    this.spinner.show();
+
+    this.budgetServ.Expenses = (await this.db.getData<Expense>('expenses', 'date'))
+      .map((exp) => this.timestampParse(exp))
+      .filter((exp) => exp.userId === this.budgetServ.Budget!.userId && exp.date.getFullYear() === this.budgetServ.Budget!.year);
+    this.totalExpenses = this.getTotalExpenses();
+    this.budgetServ.CompIsUpdated = true;
+
+    this.spinner.hide();
   }
+
   readonly timestampParse = (exp: Expense) => {
     exp.date = exp.date instanceof Timestamp ? exp.date.toDate() : exp.date;
     return exp;
@@ -80,20 +79,22 @@ export class MonthComponent implements OnInit {
       this.spinner.hide();
       budget = await this.createBudgetData()
         .then(async (data) => {
+          if (!data) return;
+
           this.spinner.show();
           const newBudget: Budget = {
             id: '',
             userId: this.auth.UserInSession!.id,
             month: this.budgetServ.SelMonth,
             year: new Date().getFullYear(),
-            income: data!.income,
-            expenseRatio: data!.expenseRatio,
+            income: data.income,
+            expenseRatio: data.expenseRatio,
             expenseCategories: defaultExpCategories
           };
 
           const budId = await this.db.addData('budgets', newBudget, true);
           newBudget.id = budId;
-          return data ? newBudget : undefined;
+          return newBudget;
         });
     } finally {
       this.spinner.hide()
@@ -144,7 +145,7 @@ export class MonthComponent implements OnInit {
   }
 
   readonly getTotalExpenses = (): number => {
-    return this.budgetServ.Expenses.reduce((total, exp) => total + exp.value, 0);
+    return this.budgetServ.MonthExpenses.reduce((total, exp) => total + exp.value, 0);
   }
 
   async openExpenseModal() {
@@ -172,7 +173,7 @@ export class MonthComponent implements OnInit {
       this.budgetServ.sortExpenses(this.fieldOrderBy, this.order);
     }
   }
-  
+
   fieldOrderBy: 'date' | 'category' | 'description' | 'value' = 'date';
   order: 'asc' | 'desc' = 'asc';
   toggleOrder(field: 'date' | 'category' | 'description' | 'value') {
