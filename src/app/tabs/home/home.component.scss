@@ -1,9 +1,33 @@
-ion-modal {
-  --height: auto;
+.container {
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  justify-content: center;
 
-  align-items: end;
+  ion-card {
+    h1 {
+      font-size: 1.5rem;
+    }
+
+    h2 {
+      font-size: 1.25rem;
+    }
+
+    h3 {
+      font-size: 1.2rem;
+    }
+
+    p {
+      font-size: 1.1rem;
+    }
+  }
 }
 
-ion-picker {
-  margin-bottom: var(--ion-safe-area-bottom);
+ion-modal {
+  --height: auto;
+  align-items: end;
+
+  ion-picker {
+    margin-bottom: var(--ion-safe-area-bottom);
+  }
 }

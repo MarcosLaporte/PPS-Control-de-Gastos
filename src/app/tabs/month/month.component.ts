@@ -42,8 +42,7 @@ export class MonthComponent {
 
   async setupData() {
     this.budgetServ.Budget = await this.getUserBudget();
-    console.log(this.budgetServ.Budget);
-    
+
     if (!this.budgetServ.Budget) return;
 
     this.spinner.show();

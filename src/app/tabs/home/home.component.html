@@ -1,18 +1,34 @@
-<div class="container bg-img">
-  <ion-card>
-    Bienvenido a la aplicación de control de gastos!<br>
-    Aquí podrá controlar sus ingresos y gastos mensuales, categorizando y controlando mediante gráficos.
+<div class="container bg-img ion-padding">
+  <ion-card color="tertiary">
+    <ion-card-content>
+      <ion-text>
+        <h1>Bienvenido a la aplicación de control de gastos!</h1>
+        <h2>Aquí podrá controlar sus ingresos y gastos mensuales, categorizando y controlando mediante gráficos.</h2>
+      </ion-text>
+    </ion-card-content>
   </ion-card>
 
-  <ion-button id="open-modal">Open modal</ion-button>
-  <ion-modal #modal trigger="open-modal" (didDismiss)="onDidDismiss($event)">
+  <ion-button id="open-modal" expand="fill" color="primary">Seleccionar mes</ion-button>
+
+  <ion-card>
+    <ion-card-content>
+      <ion-text>
+        <h3>Cómo usar esta aplicación:</h3>
+        <p>1. Seleccione el mes utilizando el botón de arriba.</p>
+        <p>2. Agregue sus ingresos y gastos en las respectivas categorías.</p>
+        <p>3. Visualice sus datos en informes y gráficos para un mejor control.</p>
+      </ion-text>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-modal #monthModal trigger="open-modal" (didDismiss)="onDidDismiss($event)">
     <ng-template>
       <ion-toolbar>
         <ion-buttons slot="start">
-          <ion-button (click)="modal.dismiss(null, 'cancel')">Cancelar</ion-button>
+          <ion-button (click)="monthModal.dismiss(null, 'cancel')">Cancelar</ion-button>
         </ion-buttons>
         <ion-buttons slot="end">
-          <ion-button (click)="modal.dismiss(selMonth, 'confirm')">Aceptar</ion-button>
+          <ion-button (click)="monthModal.dismiss(selMonth, 'confirm')">Aceptar</ion-button>
         </ion-buttons>
       </ion-toolbar>
       <ion-picker>

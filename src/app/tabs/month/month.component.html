@@ -58,11 +58,18 @@
 
     <ion-button expand="block" (click)="openExpenseModal()">Cargar nuevo gasto</ion-button>
   </div>
-  <ng-template #noBudget>
-    <ion-card>
-      <ion-text>No hay nada registrado para el mes de {{budgetServ.SelMonth | monthSpanish}}</ion-text>
 
-      <ion-button (click)="setupData()">Agregue los datos para el mes</ion-button>
+  <ng-template #noBudget>
+    <ion-card class="no-budget">
+      <ion-card-content>
+        <ion-icon name="alert-circle-outline" style="font-size: 50vw; color: #ffcc00;"></ion-icon>
+        <ion-text>
+          <h2>No hay nada registrado para el mes de {{budgetServ.SelMonth | monthSpanish}}</h2>
+          <p>Para comenzar a llevar un control de sus gastos e ingresos, agregue los datos para el mes actual.</p>
+        </ion-text>
+
+        <ion-button expand="block" color="primary" (click)="setupData()">Agregar datos</ion-button>
+      </ion-card-content>
     </ion-card>
   </ng-template>
 </div>
