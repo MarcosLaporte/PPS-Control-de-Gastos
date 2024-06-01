@@ -28,7 +28,7 @@ export class LoginPage {
       this.password = "";
       this.spinner.hide();
       ToastSuccess.fire('Operación realizada con éxito.');
-      this.navCtrl.navigateBack('/tabs/home');
+      this.navCtrl.navigateRoot('/tabs');
     } catch (error: any) {
       this.spinner.hide();
       ToastError.fire('Ups! Algo salió mal.', error.message);

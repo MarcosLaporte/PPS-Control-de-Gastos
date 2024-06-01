@@ -55,8 +55,8 @@ export class SignupPage {
       this.passCheck = "";
       this.gender = undefined;
       this.type = undefined;
-      ToastSuccess.fire('Operación realizada con éxito.')
-      this.navCtrl.navigateBack('/tabs/home')
+      ToastSuccess.fire('Operación realizada con éxito.');
+      this.navCtrl.navigateRoot('/tabs');
     } catch (error: any) {
       this.spinner.hide();
       ToastError.fire('Ups! Algo salió mal.', error.message);
